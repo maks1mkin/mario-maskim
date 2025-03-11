@@ -1,0 +1,49 @@
+---
+- hosts: all
+  become: true
+  tasks:
+
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Create directory for static content
+      file:
+        path: "/var/www/app/mario-maskim/"
+        state: directory
+        mode: 0755
+
+    - name: Copy static files
+      copy:
+        src: "../app/files/site/"
+        dest: "/var/www/mario-maskim/"
+        mode: 0644
+        remote_src: no 
+
+    - name: Update static nginx config
+      template: 
+        src: "../app/files/nginx.conf.j2"
+        dest: "/etc/nginx/sites-available/mario-maskim"
+        mode: 0644
+      notify: Restart Nginx
+
+    - name: Enable Nginx site
+      file:
+        src: "/etc/nginx/sites-available/mario-maskim"
+        dest: "/etc/nginx/sites-enabled/mario-maskim"
+        state: link
+
+    - name: Remove default Nginx site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: Restart Nginx
+
+
+  handlers:
+    - name: Restart Nginx
+      service: 
+        name: nginx 
+        state: restarted 
+     
