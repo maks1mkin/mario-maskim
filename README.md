@@ -1,7 +1,7 @@
 # mario-maskim
 
 ## Description
-This project sets up an Nginx web server to serve the site `mario.maskimtech.com`. It uses Ansible to automate the server configuration.
+This project installs an Nginx web server to serve a mario game website. It uses Ansible to automate the server configuration.
 
 ## Project Structure
 - `README.md`: This file with the project description.
